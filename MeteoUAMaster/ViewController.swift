@@ -33,10 +33,16 @@ class ViewController: UIViewController {
             if let urlIcono = URL(string: self.OW_URL_BASE_ICON+icono+".png" ) {
                 let datosIcono = try! Data(contentsOf: urlIcono)
                 let imagenIcono = UIImage(data: datosIcono)
+                OperationQueue.main.addOperation() {
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    self.imgTiempo.image = imagenIcono
+                    self.tagTiempo.text = descripcion
+                }
                 
             }
             
         }
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         dataTask.resume()
         
     }
