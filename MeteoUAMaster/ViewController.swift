@@ -13,6 +13,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var imgTiempo: UIImageView!
     @IBOutlet weak var tagTiempo: UILabel!
     @IBOutlet weak var localidad: UITextField!
+    var textoDelegate = TextoDelegate()
     
     let OW_URL_BASE = "https://api.openweathermap.org/data/2.5/weather?lang=es&units=metric&appid=1adb13e22f23c3de1ca37f3be90763a9&q="
     let OW_URL_BASE_ICON = "https://openweathermap.org/img/w/"
@@ -56,6 +57,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //let delegate =
+        localidad.delegate = self.textoDelegate
         // Do any additional setup after loading the view.
     }
 
