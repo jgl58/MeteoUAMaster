@@ -20,25 +20,32 @@ class ViewController: UIViewController {
     func consultarTiempo(localidad:String) {
         let urlString = OW_URL_BASE+localidad
         let url = URL(string:urlString)
+        
         let dataTask = URLSession.shared.dataTask(with: url!) {
             datos, respuesta, error in
-            
-            let jsonStd = try! JSONSerialization.jsonObject(with: datos!, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:AnyObject]
-            let weather = jsonStd["weather"]! as! [AnyObject]
-            let currentWeather = weather[0] as! [String:AnyObject]
-            let descripcion = currentWeather["description"]! as! String
-            print("El tiempo en \(localidad) es: \(descripcion)")
-            //Estamos bajándonos la imagen pero todavía no la usamos
-            let icono = currentWeather["icon"]! as! String
-            if let urlIcono = URL(string: self.OW_URL_BASE_ICON+icono+".png" ) {
-                let datosIcono = try! Data(contentsOf: urlIcono)
-                let imagenIcono = UIImage(data: datosIcono)
-                OperationQueue.main.addOperation() {
-                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                    self.imgTiempo.image = imagenIcono
-                    self.tagTiempo.text = descripcion
+            do{
+                let jsonStd = try JSONSerialization.jsonObject(with: datos!, options: JSONSerialization.ReadingOptions.mutableContainers) as! [String:AnyObject]
+
+                let weather = jsonStd["weather"]! as! [AnyObject]
+                let currentWeather = weather[0] as! [String:AnyObject]
+                let descripcion = currentWeather["description"]! as! String
+                print("El tiempo en \(localidad) es: \(descripcion)")
+                //Estamos bajándonos la imagen pero todavía no la usamos
+                let icono = currentWeather["icon"]! as! String
+                if let urlIcono = URL(string: self.OW_URL_BASE_ICON+icono+".png" ) {
+                    let datosIcono = try Data(contentsOf: urlIcono)
+                    let imagenIcono = UIImage(data: datosIcono)
+                    OperationQueue.main.addOperation() {
+                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                        
+                        self.imgTiempo.image = imagenIcono
+                        self.tagTiempo.text = descripcion
+                    }
                 }
                 
+            
+            }catch{
+                print("Ha cascado")
             }
             
         }
